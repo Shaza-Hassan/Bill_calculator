@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/billCreationFragment">
+
+    <fragment
+        android:id="@+id/billCreationFragment"
+        android:name="com.shaza.billcalculator.ui.bill_creation.BillCreationFragment"
+        android:label="Bill creation"
+        tools:layout="@layout/bill_creation_fragment">
+        <action
+            android:id="@+id/action_calculatorFragment_to_billCalculatorFragment"
+            app:destination="@id/billCalculatorFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/billCalculatorFragment"
+        android:name="com.shaza.billcalculator.ui.bill_calculator.BillCalculatorFragment"
+        android:label="Bill calculator"
+        tools:layout="@layout/bill_calculator_fragment">
+        <argument
+            android:name="services"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="taxes"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="delivery"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="numberOfPeople"
+            android:defaultValue="1"
+            app:argType="integer" />
+    </fragment>
+</navigation>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="oneUnit">8dp</dimen>
+    <dimen name="twoUnits">16dp</dimen>
+    <dimen name="threeUnits">24dp</dimen>
+    <dimen name="fourUnits">32dp</dimen>
+    <dimen name="fiveUnits">40dp</dimen>
+</resources>
