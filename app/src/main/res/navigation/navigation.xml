@@ -36,5 +36,19 @@
             android:name="numberOfPeople"
             android:defaultValue="1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_billCalculatorFragment_to_billReusltFragment"
+            app:destination="@id/billResultFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/billResultFragment"
+        android:name="com.shaza.billcalculator.ui.bill_result.BillResultFragment"
+        android:label="bill_result_fragment"
+        tools:layout="@layout/bill_result_fragment">
+        <argument
+            android:name="users"
+            app:argType="com.shaza.billcalculator.model.User[]" />
+    </fragment>
+
 </navigation>

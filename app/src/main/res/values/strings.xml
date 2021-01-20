@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Bill calculator</string>
     <string name="bill_creation">Bill Creation</string>
+    <string name="bill_result">Bill Result</string>
     <string name="number_of_persons_in_this_bill">Number of persons in this bill</string>
     <string name="sharing_between_all_persons_in_the_bill">Sharing between all persons in the bill</string>
     <string name="taxes">taxes</string>
@@ -11,4 +12,6 @@
     <string name="add_new_item">Add new item</string>
     <string name="item_name">Item name</string>
     <string name="item_price">Item price</string>
+    <string name="username">Username</string>
+    <string name="total_cost">Total cost</string>
 </resources>

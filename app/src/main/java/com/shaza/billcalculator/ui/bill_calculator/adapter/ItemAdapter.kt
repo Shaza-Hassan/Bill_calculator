@@ -25,8 +25,15 @@ class ItemAdapter(private val items: List<Item>) : RecyclerView.Adapter<ItemAdap
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Item) {
+            if (item.itemPrice.toString().isNotEmpty()) {
+                itemView.item_price_edit_text.setText(item.itemPrice.toString())
+            }
+            itemView.item_name_edit_text.setText(item.itemName)
+
             itemView.item_price_layout?.editText?.doOnTextChanged { text, _, _, _ ->
-                item.itemPrice = text.toString().toDouble()
+                if (text.toString().isNotEmpty()) {
+                    item.itemPrice = text.toString().toDouble()
+                }
             }
 
             itemView.item_name_layout?.editText?.doOnTextChanged { text, _, _, _ ->

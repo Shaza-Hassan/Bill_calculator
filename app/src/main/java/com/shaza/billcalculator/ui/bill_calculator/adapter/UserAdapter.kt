@@ -5,6 +5,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shaza.billcalculator.R
@@ -27,7 +28,7 @@ class UserAdapter(private val items: List<User>) : RecyclerView.Adapter<UserAdap
 
     inner class UserItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var listOfItems = mutableListOf<Item>()
+//        var listOfItems = mutableListOf<Item>()/
 
         init {
             val linearLayoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
@@ -35,13 +36,13 @@ class UserAdapter(private val items: List<User>) : RecyclerView.Adapter<UserAdap
 
             itemView.add_new_item.setOnClickListener {
                 val item = Item()
-                listOfItems.add(item)
+                items[adapterPosition].listOfItems.add(item)
                 notifyItemChanged(adapterPosition)
             }
 
             itemView.remove_item.setOnClickListener {
-                val lastIndex = listOfItems.size - 1
-                listOfItems.removeAt(lastIndex)
+                val lastIndex = items[adapterPosition].listOfItems.size - 1
+                items[adapterPosition].listOfItems.removeAt(lastIndex)
                 notifyItemChanged(adapterPosition)
             }
         }
@@ -49,11 +50,14 @@ class UserAdapter(private val items: List<User>) : RecyclerView.Adapter<UserAdap
         fun bind(user: User) {
             itemView.username_edittext.setText(user.name)
 
-            val adapter = ItemAdapter(listOfItems)
+            itemView.username_edittext_layout?.editText?.doOnTextChanged { text, _, _, _ ->
+                user.name = text.toString()
+            }
+            val adapter = ItemAdapter(user.listOfItems)
 
             itemView.list_item.adapter = adapter
 
-            if (listOfItems.isNotEmpty()) {
+            if (user.listOfItems.isNotEmpty()) {
                 itemView.remove_item.visibility = VISIBLE
             } else {
                 itemView.remove_item.visibility = GONE
@@ -64,8 +68,6 @@ class UserAdapter(private val items: List<User>) : RecyclerView.Adapter<UserAdap
             } else {
                 itemView.divider.visibility = VISIBLE
             }
-
-            user.listOfItems = listOfItems
         }
 
     }
