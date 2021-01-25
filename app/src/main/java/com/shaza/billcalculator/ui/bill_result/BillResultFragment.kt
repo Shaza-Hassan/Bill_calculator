@@ -14,6 +14,7 @@ import com.shaza.billcalculator.ui.MainActivity
 import com.shaza.billcalculator.ui.bill_result.adapter.UserTotalCostAdapter
 import kotlinx.android.synthetic.main.bill_result_fragment.*
 
+
 class BillResultFragment : Fragment() {
 
     companion object {

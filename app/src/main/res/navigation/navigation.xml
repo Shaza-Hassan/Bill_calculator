@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/billCreationFragment">
+    app:startDestination="@id/listOfBillsFragment">
 
     <fragment
         android:id="@+id/billCreationFragment"
@@ -49,6 +49,23 @@
         <argument
             android:name="users"
             app:argType="com.shaza.billcalculator.model.User[]" />
+        <action
+            android:id="@+id/action_billResultFragment_to_billCreationFragment"
+            app:destination="@id/billCreationFragment"
+            app:popUpTo="@+id/billCreationFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/listOfBillsFragment"
+        android:name="com.shaza.billcalculator.ui.all_bills.ListOfBillsFragment"
+        android:label="list_of_bills_fragment"
+        tools:layout="@layout/list_of_bills_fragment">
+        <action
+            android:id="@+id/action_listOfBillsFragment_to_billCreationFragment"
+            app:destination="@id/billCreationFragment" />
+        <action
+            android:id="@+id/action_listOfBillsFragment_to_billResultFragment"
+            app:destination="@id/billResultFragment" />
     </fragment>
 
 </navigation>

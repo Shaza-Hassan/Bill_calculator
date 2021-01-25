@@ -40,7 +40,7 @@ class BillCalculatorFragmentViewModel : ViewModel() {
     private fun createUserList() {
         val userList = mutableListOf<User>()
         for (i in 1..noOfPeople.value!!) {
-            val user = User(id = 1, "User $i")
+            val user = User(name = "User $i")
             userList.add(user)
         }
         userListLiveData.value = userList
