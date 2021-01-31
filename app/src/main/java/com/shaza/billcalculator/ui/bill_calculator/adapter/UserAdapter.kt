@@ -28,8 +28,6 @@ class UserAdapter(private val items: List<User>) : RecyclerView.Adapter<UserAdap
 
     inner class UserItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-//        var listOfItems = mutableListOf<Item>()/
-
         init {
             val linearLayoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
             itemView.list_item.layoutManager = linearLayoutManager
@@ -51,7 +49,7 @@ class UserAdapter(private val items: List<User>) : RecyclerView.Adapter<UserAdap
             itemView.username_edittext.setText(user.name)
 
             itemView.username_edittext_layout?.editText?.doOnTextChanged { text, _, _, _ ->
-                user.name = text.toString()
+                items[adapterPosition].name = text.toString()
             }
             val adapter = ItemAdapter(user.listOfItems)
 

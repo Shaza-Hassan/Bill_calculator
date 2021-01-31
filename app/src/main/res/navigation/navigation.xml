@@ -55,9 +55,8 @@
             app:argType="com.shaza.billcalculator.model.User[]" />
         <action
             android:id="@+id/action_billResultFragment_to_billCreationFragment"
-            app:destination="@id/billCreationFragment"
-            app:popUpTo="@+id/billCreationFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/listOfBillsFragment"
+            app:popUpTo="@id/listOfBillsFragment" />
     </fragment>
     <fragment
         android:id="@+id/listOfBillsFragment"

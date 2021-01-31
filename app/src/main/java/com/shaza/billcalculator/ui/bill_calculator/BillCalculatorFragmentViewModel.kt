@@ -3,10 +3,10 @@ package com.shaza.billcalculator.ui.bill_calculator
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.shaza.billcalculator.BillApplication
+import com.shaza.billcalculator.helper.SingleLiveData
 import com.shaza.billcalculator.model.Bill
 import com.shaza.billcalculator.model.User
 import io.reactivex.disposables.CompositeDisposable
@@ -16,22 +16,23 @@ class BillCalculatorFragmentViewModel(private val application: BillApplication) 
     // TODO: Implement the ViewModel
 
     val tag = BillCalculatorFragmentViewModel::class.java.simpleName
-    val addTaxes = MutableLiveData<Boolean>()
-    val addServices = MutableLiveData<Boolean>()
-    val addDelivery = MutableLiveData<Boolean>()
-    val noOfPeople = MutableLiveData<Int>()
-    val billId = MutableLiveData<Long>()
-    val billName = MutableLiveData<String>()
-    val taxesValue = MutableLiveData<Double>()
-    val servicesValue = MutableLiveData<Double>()
-    val deliveryValue = MutableLiveData<Double>()
-    val addedToDB = MutableLiveData<Boolean>()
-    val costForEveryPerson = MutableLiveData<Double>()
+    val addTaxes = SingleLiveData<Boolean>()
+    val addServices = SingleLiveData<Boolean>()
+    val addDelivery = SingleLiveData<Boolean>()
+    private val noOfPeople = SingleLiveData<Int>()
+    private var billId: Long = 0
+    private val billName = SingleLiveData<String>()
+    private val taxesValue = SingleLiveData<Double>()
+    private val servicesValue = SingleLiveData<Double>()
+    private val deliveryValue = SingleLiveData<Double>()
+    val addedToDB = SingleLiveData<Boolean>()
+    val costForEveryPerson = SingleLiveData<Double>()
+    val userList = mutableListOf<User>()
 
-    val userListLiveData = MutableLiveData<MutableList<User>>()
+    val userListLiveData = SingleLiveData<MutableList<User>>()
 
     var compositeDisposable = CompositeDisposable()
-    var uiErrorLiveData = MutableLiveData<String>()
+    var uiErrorLiveData = SingleLiveData<String>()
 
     init {
         taxesValue.value = 0.0
@@ -57,7 +58,7 @@ class BillCalculatorFragmentViewModel(private val application: BillApplication) 
     }
 
     private fun createUserList() {
-        val userList = mutableListOf<User>()
+        userList.clear()
         for (i in 1..noOfPeople.value!!) {
             val user = User(name = "User $i")
             userList.add(user)
@@ -86,27 +87,27 @@ class BillCalculatorFragmentViewModel(private val application: BillApplication) 
         val bill = Bill(billName = billName.value!!)
         val observable = application.billRepo.insertNewBill(bill).subscribeOn(Schedulers.io())
                 .doOnNext {
-                    billId.postValue(it)
-                    calculateCostForEveryPerson()
+//                    billId = it
+                    calculateCostForEveryPerson(it)
                 }.doOnError {
                     uiErrorLiveData.postValue(it.message)
                 }
         compositeDisposable.add(observable.subscribe())
     }
 
-    private fun calculateCostForEveryPerson() {
+    private fun calculateCostForEveryPerson(billId: Long) {
         val sharedItem = (taxesValue.value!! + servicesValue.value!! + deliveryValue.value!!) / noOfPeople.value!!
-        for (user in userListLiveData.value!!) {
+        for (user in userList) {
             var totalCost = user.listOfItems.map { it.itemPrice }.sum()
             totalCost += sharedItem
             user.totalCost = totalCost
-            user.billId = billId.value!!
+            user.billId = billId
         }
         addUsersInDB()
     }
 
     private fun addUsersInDB() {
-        for (user in userListLiveData.value!!) {
+        for (user in userList) {
             val observale = application.userRepo.insertNewBill(user).subscribeOn(Schedulers.io())
                     .doOnNext {
                         Log.v(tag, it.toString())

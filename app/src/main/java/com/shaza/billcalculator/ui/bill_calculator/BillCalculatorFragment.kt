@@ -110,8 +110,6 @@ class BillCalculatorFragment : Fragment() {
 
         calculate_button.setOnClickListener {
             viewModel.createBillInDBAndCalculate()
-
-
         }
     }
 
