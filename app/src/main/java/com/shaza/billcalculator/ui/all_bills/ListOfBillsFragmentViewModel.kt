@@ -1,6 +1,5 @@
 package com.shaza.billcalculator.ui.all_bills
 
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +15,7 @@ class ListOfBillsFragmentViewModel(private var application: BillApplication) :
     private val tag = ListOfBillsFragmentViewModel::class.java.simpleName
     val allBills = MutableLiveData<List<Bill>>()
     var compositeDisposable = CompositeDisposable()
-
+    var uiErrorLiveData = MutableLiveData<String>()
     fun onCreate() {
         if (compositeDisposable.isDisposed) {
             compositeDisposable = CompositeDisposable()
@@ -26,10 +25,9 @@ class ListOfBillsFragmentViewModel(private var application: BillApplication) :
     fun getAllBills() {
         val observable = application.billRepo.allBills.subscribeOn(Schedulers.io())
             .doOnNext {
-                Log.v(tag, it.size.toString())
                 allBills.postValue(it)
             }.doOnError {
-                Log.e(tag, it.localizedMessage)
+                    uiErrorLiveData.postValue(it.message)
             }
 
         compositeDisposable.add(observable.subscribe())

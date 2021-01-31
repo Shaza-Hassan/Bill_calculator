@@ -26,6 +26,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bill_name_input_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twoUnits"
+                android:hint="@string/bill_name"
+                app:layout_constraintTop_toBottomOf="@id/title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
             <!--            number of people container-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/no_of_people_layout"
@@ -34,13 +48,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/twoUnits"
                 android:hint="@string/number_of_persons_in_this_bill"
-                app:layout_constraintTop_toBottomOf="@id/title">
+                app:layout_constraintTop_toBottomOf="@id/bill_name_input_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/no_of_people_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:digits="123456789"
+                    android:digits="1234567890"
                     android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>

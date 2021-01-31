@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.shaza.billcalculator.BillApplication
 import com.shaza.billcalculator.R
 import com.shaza.billcalculator.ui.MainActivity
 import kotlinx.android.synthetic.main.bill_creation_fragment.*
@@ -19,9 +19,7 @@ class BillCreationFragment : Fragment() {
         fun newInstance() = BillCreationFragment()
     }
 
-    private val viewModel: BillCreationFragmentViewModel by viewModels {
-        BillCreationViewModelFactory((activity?.application as BillApplication))
-    }
+    private lateinit var viewModel: BillCreationFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +35,7 @@ class BillCreationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(BillCreationFragmentViewModel::class.java)
         viewModel.onCreate()
     }
 
@@ -52,24 +51,55 @@ class BillCreationFragment : Fragment() {
     }
 
     private fun initClickListener() {
+        no_of_people_layout?.editText?.doOnTextChanged { text, _, _, _ ->
+            no_of_people_layout.isErrorEnabled = false
+            viewModel.updateNoOfPerson(text.toString().toIntOrNull())
+        }
+
+        bill_name_input_layout?.editText?.doOnTextChanged { text, _, _, _ ->
+            viewModel.updateBillName(text.toString())
+        }
+
+        taxes_checkbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.updateTaxes(isChecked)
+        }
+
+        services_checkbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.updateServices(isChecked)
+        }
+
+        delivery_checkbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.updateDelivery(isChecked)
+        }
         createBillButton.setOnClickListener {
-            val number = no_of_people_edittext.text.toString().toIntOrNull()
-            if (number != null && number > 0) {
-                val addTaxes = taxes_checkbox.isChecked
-                val addServices = services_checkbox.isChecked
-                val addDelivery = delivery_checkbox.isChecked
-
-                val bundle = bundleOf(
-                    "services" to addServices,
-                    "taxes" to addTaxes,
-                    "delivery" to addDelivery,
-                    "numberOfPeople" to number
-                )
-                findNavController().navigate(R.id.action_calculatorFragment_to_billCalculatorFragment, bundle)
-            }
-
+            checkFields()
         }
 
     }
 
+    private fun checkFields() {
+
+        if (viewModel.checkEmptyOfNoOfPerson()) {
+            no_of_people_layout.isErrorEnabled = true
+            no_of_people_layout.error = getString(R.string.no_of_is_empty)
+        } else if (!viewModel.checkRightValueOfNoOfPerson()) {
+            no_of_people_layout.isErrorEnabled = true
+            no_of_people_layout.error = getString(R.string.no_of_person_greater_than_zero)
+        } else {
+            val name = viewModel.billNameLD.value ?: "Bill name"
+            val number = viewModel.noOfPersonsOnBillLD.value
+            val addTaxes = viewModel.taxesLD.value
+            val addServices = viewModel.servicesLD.value
+            val addDelivery = viewModel.deliveryLD.value
+
+            val bundle = bundleOf(
+                    "services" to addServices,
+                    "taxes" to addTaxes,
+                    "delivery" to addDelivery,
+                    "numberOfPeople" to number,
+                    "name" to name
+            )
+            findNavController().navigate(R.id.action_calculatorFragment_to_billCalculatorFragment, bundle)
+        }
+    }
 }

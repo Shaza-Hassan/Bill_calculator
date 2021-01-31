@@ -14,4 +14,9 @@
     <string name="item_price">Item price</string>
     <string name="username">Username</string>
     <string name="total_cost">Total cost</string>
+    <string name="bill_name">Bill name</string>
+    <string name="no_of_person_greater_than_zero">No of person must be greater than 0</string>
+    <string name="no_of_is_empty">Please fill in no of persons in bill</string>
+    <string name="error_title">Error</string>
+    <string name="ok">Ok</string>
 </resources>

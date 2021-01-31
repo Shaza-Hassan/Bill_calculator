@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shaza.billcalculator.BillApplication
 import com.shaza.billcalculator.R
@@ -40,6 +42,7 @@ class ListOfBillsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initObserver()
         initAdapter()
+        initListener()
         viewModel.getAllBills()
     }
 
@@ -48,6 +51,17 @@ class ListOfBillsFragment : Fragment() {
             billList = it as MutableList<Bill>
             initAdapter()
         })
+
+        viewModel.uiErrorLiveData.observe(viewLifecycleOwner, Observer {
+            val builder = context?.let { it1 -> AlertDialog.Builder(it1).create() }
+            with(builder) {
+                this?.setTitle(getString(R.string.error_title))
+                this?.setMessage(it)
+                this?.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            }
+        })
     }
 
     private fun initAdapter() {
@@ -55,6 +69,12 @@ class ListOfBillsFragment : Fragment() {
         all_bills.layoutManager = linearLayoutManager
         adapter = BillAdapter(billList)
         all_bills.adapter = adapter
+    }
+
+    private fun initListener() {
+        add_new_bill.setOnClickListener {
+            findNavController().navigate(R.id.action_listOfBillsFragment_to_billCreationFragment)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

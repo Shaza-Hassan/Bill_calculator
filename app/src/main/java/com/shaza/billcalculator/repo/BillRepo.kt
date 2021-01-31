@@ -3,7 +3,6 @@ package com.shaza.billcalculator.repo
 import com.shaza.billcalculator.model.Bill
 import com.shaza.billcalculator.room.BillDao
 import io.reactivex.Observable
-import io.reactivex.Single
 
 class BillRepo(private val billDao: BillDao) {
 
@@ -22,7 +21,7 @@ class BillRepo(private val billDao: BillDao) {
 
     val allBills: Observable<List<Bill>> = billDao.getAllBills().toObservable()
 
-    fun insertNewBill(bill: Bill): Single<Long> {
-        return billDao.insertNewBill(bill)
+    fun insertNewBill(bill: Bill): Observable<Long> {
+        return billDao.insertNewBill(bill).toObservable()
     }
 }

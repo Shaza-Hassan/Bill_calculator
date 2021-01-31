@@ -28,7 +28,7 @@ class BillAdapter(private val bills: List<Bill>) :
     inner class BillViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(bill: Bill) {
-            itemView.bill_name.text = bill.billName
+            itemView.bill_name_input_layout.text = bill.billName
         }
     }
 

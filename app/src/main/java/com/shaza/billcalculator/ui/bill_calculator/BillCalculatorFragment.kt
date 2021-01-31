@@ -8,10 +8,11 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.shaza.billcalculator.BillApplication
 import com.shaza.billcalculator.R
 import com.shaza.billcalculator.model.User
 import com.shaza.billcalculator.ui.MainActivity
@@ -24,9 +25,12 @@ class BillCalculatorFragment : Fragment() {
         fun newInstance() = BillCalculatorFragment()
     }
 
-    private lateinit var viewModel: BillCalculatorFragmentViewModel
+    private val viewModel: BillCalculatorFragmentViewModel by viewModels {
+        BillCalculatorViewModelFactory((activity?.application as BillApplication))
+    }
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: UserAdapter
+
     private var userList = mutableListOf<User>()
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -35,10 +39,13 @@ class BillCalculatorFragment : Fragment() {
         return inflater.inflate(R.layout.bill_calculator_fragment, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.onCreate()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(BillCalculatorFragmentViewModel::class.java)
-        // TODO: Use the ViewModel
         viewModel.getData(arguments)
         initObserver()
         initListener()
@@ -78,6 +85,14 @@ class BillCalculatorFragment : Fragment() {
             userList = it
             initAdapter()
         })
+
+        viewModel.addedToDB.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                val bundle = Bundle()
+                bundle.putParcelableArray("users", viewModel.userListLiveData.value!!.toTypedArray())
+                findNavController().navigate(R.id.action_billCalculatorFragment_to_billReusltFragment, bundle)
+            }
+        })
     }
 
     private fun initListener() {
@@ -94,10 +109,8 @@ class BillCalculatorFragment : Fragment() {
         }
 
         calculate_button.setOnClickListener {
-            viewModel.calculateEachOneCost()
-            val bundle = Bundle()
-            bundle.putParcelableArray("users", viewModel.userListLiveData.value!!.toTypedArray())
-            findNavController().navigate(R.id.action_billCalculatorFragment_to_billReusltFragment, bundle)
+            viewModel.createBillInDBAndCalculate()
+
 
         }
     }
@@ -107,5 +120,10 @@ class BillCalculatorFragment : Fragment() {
         persons_in_bill.layoutManager = linearLayoutManager
         adapter = UserAdapter(userList)
         persons_in_bill.adapter = adapter
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        viewModel.onDetach()
     }
 }

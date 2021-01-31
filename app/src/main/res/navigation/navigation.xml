@@ -39,6 +39,10 @@
         <action
             android:id="@+id/action_billCalculatorFragment_to_billReusltFragment"
             app:destination="@id/billResultFragment" />
+        <argument
+            android:name="name"
+            android:defaultValue="bill name"
+            app:argType="string" />
     </fragment>
 
     <fragment
