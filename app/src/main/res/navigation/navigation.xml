@@ -48,20 +48,26 @@
     <fragment
         android:id="@+id/billResultFragment"
         android:name="com.shaza.billcalculator.ui.bill_result.BillResultFragment"
-        android:label="bill_result_fragment"
+        android:label="Bill Result"
         tools:layout="@layout/bill_result_fragment">
         <argument
             android:name="users"
             app:argType="com.shaza.billcalculator.model.User[]" />
+
         <action
-            android:id="@+id/action_billResultFragment_to_billCreationFragment"
+            android:id="@+id/action_billResultFragment_to_listOfBillsFragment"
             app:destination="@id/listOfBillsFragment"
-            app:popUpTo="@id/listOfBillsFragment" />
+            app:popUpTo="@+id/listOfBillsFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="billId"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/listOfBillsFragment"
         android:name="com.shaza.billcalculator.ui.all_bills.ListOfBillsFragment"
-        android:label="list_of_bills_fragment"
+        android:label="All Bills"
         tools:layout="@layout/list_of_bills_fragment">
         <action
             android:id="@+id/action_listOfBillsFragment_to_billCreationFragment"

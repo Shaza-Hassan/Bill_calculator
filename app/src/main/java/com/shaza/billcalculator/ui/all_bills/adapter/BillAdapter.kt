@@ -8,8 +8,8 @@ import com.shaza.billcalculator.R
 import com.shaza.billcalculator.model.Bill
 import kotlinx.android.synthetic.main.bill_item.view.*
 
-class BillAdapter(private val bills: List<Bill>) :
-    RecyclerView.Adapter<BillAdapter.BillViewHolder>() {
+class BillAdapter(private val bills: List<Bill>, private val itemClickListener: (Bill) -> Unit) :
+        RecyclerView.Adapter<BillAdapter.BillViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillViewHolder {
@@ -19,6 +19,7 @@ class BillAdapter(private val bills: List<Bill>) :
 
     override fun onBindViewHolder(holder: BillViewHolder, position: Int) {
         holder.bind(bills[position])
+        holder.itemView.setOnClickListener { itemClickListener(bills[position]) }
     }
 
     override fun getItemCount(): Int {

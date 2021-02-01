@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.shaza.billcalculator.BillApplication
 import com.shaza.billcalculator.R
 import com.shaza.billcalculator.model.User
 import com.shaza.billcalculator.ui.MainActivity
@@ -21,8 +24,9 @@ class BillResultFragment : Fragment() {
         fun newInstance() = BillResultFragment()
     }
 
-    private lateinit var viewModel: BillResultFragmentViewModel
-
+    private val viewModel: BillResultFragmentViewModel by viewModels {
+        BillResultViewModelFactory((activity?.application as BillApplication))
+    }
     private lateinit var linearLayoutManager: LinearLayoutManager
     private var userList = mutableListOf<User>()
     private lateinit var adapter: UserTotalCostAdapter
@@ -32,15 +36,25 @@ class BillResultFragment : Fragment() {
         return inflater.inflate(R.layout.bill_result_fragment, container, false)
     }
 
+
     override fun onStart() {
         super.onStart()
         (activity as MainActivity).supportActionBar?.title = context?.getString(R.string.bill_result)
 
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.onCreate()
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_billResultFragment_to_listOfBillsFragment)
+            }
+        })
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(BillResultFragmentViewModel::class.java)
         arguments?.let { viewModel.getData(it) }
         initObserver()
         initAdapter()
@@ -51,6 +65,12 @@ class BillResultFragment : Fragment() {
             userList = it
             initAdapter()
         })
+
+        viewModel.billIdLiveData.observe(viewLifecycleOwner, Observer {
+            if (it != -1) {
+                viewModel.getAllUsersForThisBill(it)
+            }
+        })
     }
 
     private fun initAdapter() {
@@ -60,4 +80,8 @@ class BillResultFragment : Fragment() {
         userListWithCost.adapter = adapter
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        viewModel.onDetach()
+    }
 }
