@@ -58,7 +58,7 @@
             android:id="@+id/action_billResultFragment_to_listOfBillsFragment"
             app:destination="@id/listOfBillsFragment"
             app:popUpTo="@+id/listOfBillsFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
         <argument
             android:name="billId"
             android:defaultValue="-1"
