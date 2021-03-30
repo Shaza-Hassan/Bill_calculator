@@ -94,6 +94,36 @@
             <!--            sharing item -->
 
 
+            <View
+                android:id="@+id/dividerTwo"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/twoUnits"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintTop_toBottomOf="@id/persons_in_bill" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/listOfAllPerson"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/oneUnit"
+                android:hint="@string/all_users"
+                app:layout_constraintTop_toBottomOf="@id/dividerTwo">
+
+                <AutoCompleteTextView
+                    android:id="@+id/selected_class"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/calculate_button" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/calculate_button"
                 android:layout_width="wrap_content"
@@ -102,7 +132,7 @@
                 android:text="@string/calculate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/persons_in_bill" />
+                app:layout_constraintTop_toBottomOf="@id/listOfAllPerson" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

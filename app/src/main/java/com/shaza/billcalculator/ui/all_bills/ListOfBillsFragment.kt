@@ -46,7 +46,6 @@ class ListOfBillsFragment : Fragment() {
         initObserver()
         initAdapter()
         initListener()
-        viewModel.getAllBills()
     }
 
     override fun onStart() {
@@ -82,13 +81,19 @@ class ListOfBillsFragment : Fragment() {
     private fun initAdapter() {
         linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         all_bills.layoutManager = linearLayoutManager
-        adapter = BillAdapter(billList) {
+        adapter = BillAdapter {
             val bundle = bundleOf(
-                    "billId" to it.billId?.toInt()
+                "billId" to it.billId?.toInt()
             )
-            findNavController().navigate(R.id.action_listOfBillsFragment_to_billResultFragment, bundle)
+            findNavController().navigate(
+                R.id.action_listOfBillsFragment_to_billResultFragment,
+                bundle
+            )
         }
         all_bills.adapter = adapter
+        viewModel.getAllBills().subscribe {
+            adapter.submitData(lifecycle, it)
+        }
     }
 
     private fun initListener() {

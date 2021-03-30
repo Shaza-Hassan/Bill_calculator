@@ -10,8 +10,8 @@ import io.reactivex.Single
 @Dao
 interface BillDao {
 
-    @Query("SELECT * FROM BILL ORDER BY billId ASC")
-    fun getAllBills(): Single<List<Bill>>
+    @Query("SELECT * FROM BILL ORDER BY billId ASC LIMIT :limit offset :offset")
+    fun getAllBills(limit: Int, offset: Int): Single<List<Bill>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewBill(bill: Bill): Single<Long>

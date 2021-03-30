@@ -1,13 +1,16 @@
 package com.shaza.billcalculator.ui.all_bills
 
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.rxjava2.cachedIn
+import androidx.paging.rxjava2.flowable
+import com.example.drdbasemodule.pagination.BillDataSource
 import com.shaza.billcalculator.BillApplication
 import com.shaza.billcalculator.model.Bill
+import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class ListOfBillsFragmentViewModel(private var application: BillApplication) :
     AndroidViewModel(application) {
@@ -22,15 +25,23 @@ class ListOfBillsFragmentViewModel(private var application: BillApplication) :
         }
     }
 
-    fun getAllBills() {
-        val observable = application.billRepo.allBills.subscribeOn(Schedulers.io())
-            .doOnNext {
-                allBills.postValue(it)
-            }.doOnError {
-                    uiErrorLiveData.postValue(it.message)
-            }
+    fun getBills() {
 
-        compositeDisposable.add(observable.subscribe())
+    }
+
+    fun getAllBills(): Flowable<PagingData<Bill>> {
+
+        return Pager(PagingConfig(pageSize = 10, prefetchDistance = 5, enablePlaceholders = true)) {
+            BillDataSource(application.billRepo, 0, 5)
+        }.flowable.cachedIn(viewModelScope)
+//        val observable = application.billRepo.allBills.subscribeOn(Schedulers.io())
+//            .doOnNext {
+//                allBills.postValue(it)
+//            }.doOnError {
+//                    uiErrorLiveData.postValue(it.message)
+//            }
+//
+//        compositeDisposable.add(observable.subscribe())
     }
 
 

@@ -1,36 +1,60 @@
 package com.shaza.billcalculator.ui.all_bills.adapter
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import com.example.drdbasemodule.pagination.BasePagingDataAdapter
 import com.shaza.billcalculator.R
 import com.shaza.billcalculator.model.Bill
 import kotlinx.android.synthetic.main.bill_item.view.*
 
-class BillAdapter(private val bills: List<Bill>, private val itemClickListener: (Bill) -> Unit) :
-        RecyclerView.Adapter<BillAdapter.BillViewHolder>() {
+class BillAdapter(private val itemClickListener: (Bill) -> Unit) :
+    BasePagingDataAdapter<Bill, BillAdapter.BillViewHolder>(BillComparator) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.bill_item, parent, false)
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillViewHolder {
+//        val view = LayoutInflater.from(parent.context).inflate(R.layout.bill_item, parent, false)
+//        return BillViewHolder(view)
+//    }
+//
+//    override fun onBindViewHolder(holder: BillViewHolder, position: Int) {
+//        holder.bind(bills[position])
+//        holder.itemView.setOnClickListener { itemClickListener(bills[position]) }
+//    }
+//
+//    override fun getItemCount(): Int {
+//        return bills.size
+//    }
+
+    inner class BillViewHolder(itemView: View) : BaseViewHolder<Bill>(itemView) {
+        init {
+            itemView.setOnClickListener { itemClickListener }
+        }
+
+        override fun bindView(item: Bill) {
+            itemView.bill_name_input_layout.text = item.billName
+        }
+
+//        fun bind(bill: Bill) {
+//            itemView.bill_name_input_layout.text = bill.billName
+//        }
+    }
+
+    override fun getItemLayout(): Int {
+        return R.layout.bill_item
+    }
+
+    override fun getViewHolderConstructor(view: View): BillViewHolder {
         return BillViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BillViewHolder, position: Int) {
-        holder.bind(bills[position])
-        holder.itemView.setOnClickListener { itemClickListener(bills[position]) }
-    }
-
-    override fun getItemCount(): Int {
-        return bills.size
-    }
-
-    inner class BillViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(bill: Bill) {
-            itemView.bill_name_input_layout.text = bill.billName
+    object BillComparator : BaseComparator<Bill>() {
+        override fun compareItems(oldItem: Bill, newItem: Bill): Boolean {
+            return oldItem.billId == newItem.billId
         }
+
+        override fun compareContentsItems(oldItem: Bill, newItem: Bill): Boolean {
+            return oldItem == newItem
+        }
+
     }
 
 }
